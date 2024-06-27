@@ -1,0 +1,43 @@
+{
+  "name": "food-nodejs-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"node dist/index.js", 
+    "dev":"nodemon src/index.ts",
+    "build": "tsc -p .",
+    "postinstall" : "npm run build"
+  },
+  "engines": {
+    "node":"18.17.1",
+    "npm":"9.6.7"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
+    "cowsay": "^1.6.0",
+    "express": "^4.19.2",
+    "figlet": "^1.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.3",
+    "multer": "^1.4.5-lts.1",
+    "ts-node-dev": "^2.0.0",
+    "twilio": "^5.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/figlet": "^1.5.8",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
+    "loadtest": "^8.0.9"
+  }
+}
