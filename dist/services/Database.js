@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const config_1 = require("../config");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: "../config/.env" });
 exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect(config_1.MONGO_URL).then((result) => {
+        yield mongoose_1.default.connect(process.env.DB_HOST_URL).then((result) => {
             console.log(`connect to DB `);
         });
     }

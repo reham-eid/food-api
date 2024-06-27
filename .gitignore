@@ -1,4 +1,4 @@
 node_modules/
 
-src/config
-dist/config
+src/config/.env
+dist/config/.env

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.onRequestOtp = exports.GenerateOtp = void 0;
 const twilio_1 = __importDefault(require("twilio"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "./config/.env" });
+dotenv_1.default.config({ path: "../config/.env" });
 // OTP
 const GenerateOtp = () => {
     const otp = Math.floor(Math.random() * 900000);

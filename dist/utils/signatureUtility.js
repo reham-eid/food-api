@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSignature = exports.generateSignature = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "./config/.env" });
+dotenv_1.default.config({ path: "../config/.env" });
 const generateSignature = (payload) => {
     const secret = process.env.JWT_SECRET;
     return jsonwebtoken_1.default.sign(payload, secret, { expiresIn: "1d" });
