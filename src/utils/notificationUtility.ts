@@ -1,6 +1,5 @@
 import twilio from "twilio";
-import dotenv from "dotenv";
-dotenv.config({ path: "../config/.env" });
+import { RECEIVE_SMS_TO, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from "../config/env";
 
 // OTP
 export const GenerateOtp = () => {
@@ -11,15 +10,15 @@ export const GenerateOtp = () => {
 };
 
 export const onRequestOtp = async(otp:number , toPhone:string)=>{
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const accountSid = TWILIO_ACCOUNT_SID;
+  const authToken = TWILIO_AUTH_TOKEN;
   
   const client = twilio(accountSid, authToken);
   
     const message = await client.messages.create({
       body :`You OTP is ${otp}`,
       to : toPhone,
-      from:process.env.RECEIVE_SMS_TO ,
+      from:RECEIVE_SMS_TO ,
     });
     console.log(message);
     return message

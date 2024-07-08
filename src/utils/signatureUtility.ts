@@ -1,18 +1,16 @@
 import jwt from "jsonwebtoken";
 import { Request } from "express";
 import { AuthPayload } from "../dto/auth.dto";
-import dotenv from "dotenv";
-
-dotenv.config({ path: "../config/.env" });
+import { JWT_SECRET } from "../config/env";
 
 export const generateSignature = (payload: AuthPayload) => {
-  const secret = process.env.JWT_SECRET as string;
-  return jwt.sign(payload, secret, { expiresIn: "1d" });
+  const secret = JWT_SECRET as string;
+  return jwt.sign(payload, secret, { expiresIn: "5d" });
 };
 
 export const validateSignature = async (req: Request) => {
   const signature = req.get("Auth");
-  const secret = process.env.JWT_SECRET as string;
+  const secret = JWT_SECRET;
   if (signature) {
     const payload = (await jwt.verify(
       signature.split(" ")[1],

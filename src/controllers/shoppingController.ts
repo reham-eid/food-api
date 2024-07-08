@@ -10,7 +10,7 @@ const getFoodAvaliability = async (
   const { pincode: pinCode } = req.params;
 
   const vendor = await vendorModel
-    .find({ pinCode, serviceAvaliable: true })
+    .find({ pinCode, serviceAvaliable: false }) // true
     .sort([["rating", "descending"]])
     .populate("foods");
   if (vendor.length < 0) {
@@ -24,16 +24,20 @@ const getTopRestaurants = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { pincode: pinCode } = req.params;
+  try {
+    const { pincode: pinCode } = req.params;
 
-  const vendor = await vendorModel
-    .find({ pinCode, serviceAvaliable: true })
-    .sort([["rating", "descending"]])
-    .limit(10);
-  if (vendor.length < 0) {
-    return res.json({ message: "NO Food Avaliability" });
+    const vendor = await vendorModel
+      .find({ pinCode, serviceAvaliable: false })
+      .sort([["rating", "descending"]])
+      .limit(10);
+    if (vendor.length === 0) {
+      return res.json({ message: "NO Food Avaliability" });
+    }
+    return res.json({ data: vendor });
+  } catch (error) {
+    next(error);
   }
-  return res.json({ vendor });
 };
 
 const getFoodIn30Min = async (
@@ -44,7 +48,7 @@ const getFoodIn30Min = async (
   const { pincode: pinCode } = req.params;
 
   const result = await vendorModel
-    .find({ pinCode, serviceAvaliable: true })
+    .find({ pinCode, serviceAvaliable: false })
     .populate("foods");
   if (result.length < 0) {
     return res.json({ message: "NO Food Avaliability" });
@@ -60,7 +64,7 @@ const getAllFoods = async (req: Request, res: Response, next: NextFunction) => {
   const { pincode: pinCode } = req.params;
 
   const result = await vendorModel
-    .find({ pinCode, serviceAvaliable: true })
+    .find({ pinCode, serviceAvaliable: false })
     .populate("foods");
   if (result.length < 0) {
     return res.json({ message: "NO Food Avaliability" });
@@ -76,7 +80,7 @@ const getRestaurantById = async (
 ) => {
   const { id } = req.params;
 
-  const vendor = await vendorModel.findById(id).populate('foods');
+  const vendor = await vendorModel.findById(id).populate("foods");
   if (!vendor) {
     return res.json({ message: "NO Food Avaliability" });
   }

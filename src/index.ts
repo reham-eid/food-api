@@ -39,10 +39,37 @@ const startServer = async () => {
   //   console.log(chalk.blue(data));
   // });
 
-  app.listen(PORT, () => {
+  const serverListen = app.listen(PORT, () => {
     console.log(`server run on ${PORT} `);
     console.log(` worker process ID pid= ${process.pid}`);
   });
+  /* Handling rejection outside express */
+  process.on("unhandledRejection", (error) => {
+    throw error;
+  });
+
+  /* Handling exception */
+  const uncaughtException = (error) => {
+    serverListen.close(() => {
+      console.error(
+        `The server was shut down due to uncaught exception: ${error.message}`
+      );
+      process.exit(1);
+    });
+  };
+
+  process.on("uncaughtException", uncaughtException);
+
+  /* Handle process termination signals */
+  const shutdown = () => {
+    serverListen.close(() => {
+      console.log("The server is shutting down...");
+      process.exit(0);
+    });
+  };
+
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 };
 
 startServer();

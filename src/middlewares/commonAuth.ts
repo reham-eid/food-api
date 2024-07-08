@@ -16,9 +16,27 @@ export const authentication = async (
   res: Response,
   next: NextFunction
 ) => {
-  const validation = await validateSignature(req);
-  if (!validation) {
-    return res.json({ message: "user not authorize" });
+  try {
+    const validation = await validateSignature(req);
+    if (!validation) {
+      return res.json({ message: "user not authorize" });
+    }
+    next();
+  } catch (error) {
+    // console.log("errorName " , error.name , "errorMessage " ,error.message);
+        if (error.name == "TokenExpiredError") {
+          return res.status(400).json({
+            message: "token expired",
+            success: false,
+          })
+        }
+    
+        if (error.name == "JsonWebTokenError") {
+          return res.status(200).json({
+            message: "invalid token",
+            success: false,
+          })
+        }
   }
-  next();
+
 };

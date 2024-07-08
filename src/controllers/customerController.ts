@@ -3,6 +3,7 @@ import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import {
   createCustomerInput,
+  createOrderInput,
   editCustomerProfileInput,
   loginCustomerInput,
 } from "../dto/customer.dto";
@@ -15,6 +16,8 @@ import {
   ValidatePassword,
 } from "../utils";
 import { customerModel } from "../models/customerModel";
+import { foodModel } from "../models/foodModel";
+import { orderModel } from "../models/orderModel";
 
 const customerSignUp = async (
   req: Request,
@@ -66,6 +69,7 @@ const customerSignUp = async (
       otp_expiry: expiry,
       lat: 0,
       lng: 0,
+      orders: [],
     };
 
     // Save the customer data to the database
@@ -247,7 +251,7 @@ const editCustomerProfile = async (
 ) => {
   try {
     const customer = req.user;
-    const customerInputs = plainToClass(editCustomerProfileInput , req.body);
+    const customerInputs = plainToClass(editCustomerProfileInput, req.body);
     const inputError = await validate(customerInputs, {
       validationError: { target: true },
     });
@@ -273,6 +277,246 @@ const editCustomerProfile = async (
     next(error);
   }
 };
+//========================= Cart =============================
+const addToCartCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Identify the current logged-in user
+    const customer = req.user;
+
+    // Fetch the customer profile and populate cart items
+    const profile = await customerModel
+      .findById(customer?._id)
+      .populate("cart.food");
+
+    // If profile is not found, prompt user to login
+    if (!profile) {
+      return res.json({ message: "customer must login before create order" });
+    }
+
+    // Extract item ID and quantity from request body
+    const { _id, quantity } = <createOrderInput>req.body;
+    let cartItems: Array<{ food: any; quantity: number }> = [];
+
+    // Check if the food item exists in the database
+    const food = await foodModel.findById(_id);
+    if (!food) {
+      return res.json({ message: "this item is sold out" });
+    }
+
+    // Get the current cart items
+    cartItems = profile.cart;
+
+    // If there are items in the cart, check if the item already exists
+    if (cartItems.length > 0) {
+      let existFoodItems = cartItems.filter(
+        (item) => item.food._id.toString() === _id
+      );
+      console.log({ existFoodItems });
+
+      // Update quantity if the item exists, otherwise add it to the cart
+      if (existFoodItems.length > 0) {
+        const index = cartItems.indexOf(existFoodItems[0]);
+        // console.log("index ",index);
+
+        if (quantity > 0) {
+          // update quantity
+          const newQuantity = (cartItems[index].quantity += quantity);
+          // console.log("dddddddddddd",newQuantity);
+          cartItems[index] = { food, quantity: newQuantity };
+        } else {
+          // remove item from cart
+          // console.log("herre",cartItems.splice(index, 1));
+          cartItems.splice(index, 1);
+        }
+      } else {
+        cartItems.push({ food, quantity });
+      }
+    } else {
+      // Add new item to an empty cart
+      cartItems.push({ food, quantity });
+    }
+
+    // Save the updated cart
+    if (cartItems) {
+      profile.cart = cartItems as any;
+      const cartResult = await profile.save();
+      return res
+        .status(200)
+        .json({ message: "item added to cart", data: cartResult });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getCartCon = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Identify the current logged-in user
+    const customer = req.user;
+
+    // Fetch the customer profile and populate cart items
+    const profile = await customerModel
+      .findById(customer?._id)
+      .populate("cart.food");
+
+    // If profile is not found, prompt user to login
+    if (!profile) {
+      return res.status(400).json({ message: "cart customer is empty" });
+    }
+    return res.status(200).json({ message: "cart", data: profile });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteCartCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Identify the current logged-in user
+    const customer = req.user;
+
+    // Fetch the customer profile and populate cart items
+    const profile = await customerModel
+      .findById(customer?._id)
+      .populate("cart.food");
+
+    // If profile is not found, prompt user to login
+    if (!profile) {
+      return res
+        .status(400)
+        .json({ message: "cart customer is already empty" });
+    }
+
+    profile.cart = [] as any;
+    const cartResult = await profile.save();
+
+    return res.status(200).json({ message: "cart", data: cartResult });
+  } catch (error) {
+    next(error);
+  }
+};
+//========================= Order =============================
+const createOrderCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // grab current login customer
+    const customer = req.user;
+    console.log("customer", customer);
+
+    const profile = await customerModel.findById(customer?._id);
+    console.log("frrr", profile);
+
+    if (!profile) {
+      return res.json({ message: "customer must login before create order" });
+    }
+    // create order id
+    const orderId = `${Math.floor(Math.random() * 900000 + 1000)}`;
+    // get order items from req
+    const cart = <[createOrderInput]>req.body;
+    let cartItems: Array<{ food: any; quantity: number }> = [];
+    // calc order amount
+    let price = 0.0;
+
+    let vendorId;
+
+    // match cart that in req with food in stock
+    const foodsId = cart.map((item) => item._id);
+    // const foods = await foodModel
+    //   .find()
+    //   .where("_id")
+    //   .in(foodsId )
+    //   .exec();
+    //OR
+    const foods = await foodModel.find({ _id: { $in: foodsId } }).exec();
+    // make price & cartItems
+    foods.map((food) =>
+      cart.map(({ _id, quantity }) => {
+        if (food._id == _id) {
+          vendorId = food.vendorId;
+          price += food.price * quantity;
+          cartItems.push({ food, quantity });
+        }
+      })
+    );
+    // create order with item descriptions
+    if (cartItems.length > 0) {
+      console.log("cartItemssssssss ", cartItems);
+
+      // create order
+      const orderData = {
+        orderId: orderId,
+        vendorId: vendorId,
+        items: cartItems,
+        totalPrice: price,
+        orderDate: new Date(),
+        paidType: "COD",
+        paymentResponse: "", // { status : true , response: Bank response}
+        orderStatus: "waiting",
+        remarks: "",
+        deliveryId: "",
+        appliedOffers: false,
+        offerId: null,
+        // readyTime: ,
+      };
+      const order = await orderModel.create(orderData);
+      // update order to user account
+        profile.cart = [] as any;
+        profile.orders.push(order);
+        const savedOrder = await profile.save();
+        return res.status(200).json({ profile: savedOrder });
+      
+    }
+    return res.status(400).json({ message: "Error happend in create order" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllOrdersCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const customer = req.user;
+
+    const profile = await customerModel
+      .findById(customer?._id)
+      .populate("orders");
+
+    if (!profile) {
+      return res.json({ message: "somthin went wrong in Profile customer" });
+    }
+
+    res.status(200).json({ profile: profile.orders });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOrderByIdCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const result = await orderModel.findById(id).populate("items.food");
+    res.status(200).json({ profile: result });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export {
   customerSignUp,
@@ -281,4 +525,10 @@ export {
   requestOtp,
   getCustomerProfile,
   editCustomerProfile,
+  addToCartCon,
+  getCartCon,
+  deleteCartCon,
+  createOrderCon,
+  getOrderByIdCon,
+  getAllOrdersCon,
 };

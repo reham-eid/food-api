@@ -41,7 +41,7 @@ const createVendorCon = async (
     serviceAvaliable: false,
     coverImages: [],
     rating: 0,
-    foodes: [],
+    foods: [],
   });
   return res.json({ message: "success", vendor });
 };
@@ -72,9 +72,13 @@ export { createVendorCon, getVendors, getVendorById };
 //==========================helper-function===================
 export const findVendor = async (id: string | undefined, email?: string) => {
   if (email) {
-    return await vendorModel.findOne({ email });
+    return await vendorModel
+      .findOne({ email })
+      .populate("foods" ,"name description price").exec();
   } else {
-    return await vendorModel.findById(id);
+    return await vendorModel
+      .findById(id)
+      .populate("foods" ,"name description price" ).exec();
   }
 };
 //============================================================

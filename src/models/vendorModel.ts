@@ -13,7 +13,9 @@ interface VendorDoc extends Document {
   serviceAvaliable: boolean;
   coverImages: [string];
   rating: number;
-  foods: any;
+  foods: [any];
+  lat: number;
+  lng: number;
 }
 
 const vendorShema = new Schema(
@@ -30,7 +32,9 @@ const vendorShema = new Schema(
     serviceAvaliable: { type: Boolean },
     coverImages: { type: [String] },
     rating: { type: Number },
-    foods: { type: Types.ObjectId, ref: "food" },
+    foods:[ { type: Types.ObjectId, ref: "food" }],
+    lat: { type: Number },
+    lng: { type: Number },
   },
   {
     toJSON: {
