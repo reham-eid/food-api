@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { vendorModel } from "../models";
+import { offerModel, vendorModel } from "../models";
 import { foodDoc } from "../models/foodModel";
 
 const getFoodAvaliability = async (
@@ -82,15 +82,29 @@ const getRestaurantById = async (
 
   const vendor = await vendorModel.findById(id).populate("foods");
   if (!vendor) {
-    return res.json({ message: "NO Food Avaliability" });
+    return res.status(400).json({ message: "NO Food Avaliability" });
   }
-  return res.json({ vendor });
+  return res.status(200).json({ vendor });
+};
+//========================= Offers =============================
+const getOffersCon = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { pinCode } = req.params;
+  const offer = await offerModel.find({ pinCode, isActive: true });
+  if (!offer) {
+    return res.status(400).json({ message: "NO offers Avaliability" });
+  }
+  res.status(200).json({ offer });
 };
 
 export {
   getFoodAvaliability,
   getFoodIn30Min,
+  getAllFoods,
   getTopRestaurants,
   getRestaurantById,
-  getAllFoods,
+  getOffersCon,
 };

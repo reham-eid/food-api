@@ -7,7 +7,7 @@
       "ES6",
       "ESNext.AsyncIterable"
     ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
-    "rootDir": "./src" /* Specify the root folder within your source files. */,
+    // "rootDir": "." /* Specify the root folder within your source files. */,
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "sourceMap": true /* Create source map files for emitted JavaScript files. */,
     "experimentalDecorators": true /* Enable experimental support for legacy experimental decorators. */,
@@ -15,5 +15,12 @@
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "strictPropertyInitialization": false /* Check for class properties that are declared but not set in the constructor. */,
     "moduleResolution": "node", 
-  }
+  },
+  "include": [
+    "src/**/*",
+    "config/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

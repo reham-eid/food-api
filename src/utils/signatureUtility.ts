@@ -1,16 +1,17 @@
 import jwt from "jsonwebtoken";
 import { Request } from "express";
 import { AuthPayload } from "../dto/auth.dto";
-import { JWT_SECRET } from "../config/env";
+import config from "config";
 
+const jwt_secret = config.get("JWT_SECRET") as string;
 export const generateSignature = (payload: AuthPayload) => {
-  const secret = JWT_SECRET as string;
+  const secret = jwt_secret;
   return jwt.sign(payload, secret, { expiresIn: "5d" });
 };
 
 export const validateSignature = async (req: Request) => {
   const signature = req.get("Auth");
-  const secret = JWT_SECRET;
+  const secret = jwt_secret;
   if (signature) {
     const payload = (await jwt.verify(
       signature.split(" ")[1],

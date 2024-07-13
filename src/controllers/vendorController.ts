@@ -94,23 +94,31 @@ const updateVendorCoverImage = async (
     res.json({ data: createdCoverImg });
   }
 };
+//================Delivery=======================
 const updateVendorService = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
+  const { lat, lng } = req.body;
+
   if (!user) {
     return res.json({ message: "Vendor Info not found" });
   }
   const exisitVendor = await findVendor(user._id);
   if (exisitVendor !== null) {
     exisitVendor.serviceAvaliable = !exisitVendor.serviceAvaliable;
+
+    if (lat && lng) {
+      exisitVendor.lat = lat;
+      exisitVendor.lng = lng;
+    }
     const vendor = await exisitVendor.save();
-    res.json({ vendor });
+    res.status(200).json({ vendor });
   }
 };
-
+//========================= Food =============================
 const addFoodCon = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
   if (!user) {
@@ -142,7 +150,6 @@ const addFoodCon = async (req: Request, res: Response, next: NextFunction) => {
     res.json({ data: result });
   }
 };
-
 const getFoodCon = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
   if (!user) {
@@ -167,7 +174,6 @@ const getCurrentOrders = async (
 
   res.status(200).json({ data: orders });
 };
-
 const getOrderDetails = async (
   req: Request,
   res: Response,
@@ -181,7 +187,6 @@ const getOrderDetails = async (
   }
   res.status(200).json({ data: order });
 };
-
 const processOrder = async (
   req: Request,
   res: Response,
@@ -204,12 +209,6 @@ const processOrder = async (
   res.status(200).json({ data: orderResult });
 };
 //========================= Offers =============================
-const getOffersCon = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {};
-
 const addOfferCon = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
   const {
@@ -248,13 +247,12 @@ const addOfferCon = async (req: Request, res: Response, next: NextFunction) => {
     bins,
     pinCode,
     isActive,
-    vendors: [vendor],  
+    vendors: [vendor],
   };
   const offer = await offerModel.create(offerData);
 
   res.status(201).json({ message: "success", data: offer });
 };
-
 const editOfferCon = async (
   req: Request,
   res: Response,
@@ -272,7 +270,6 @@ export {
   getCurrentOrders,
   getOrderDetails,
   processOrder,
-  getOffersCon,
   addOfferCon,
   editOfferCon,
 };

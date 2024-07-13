@@ -1,10 +1,10 @@
 import express from "express";
 import dbConnection from "./services/Database";
 import App from "./services/ExpressApp";
+import config from "config";
 // import cowsay from "cowsay";
 // import figlet from "figlet";
 // import chalk from "chalk";
-const PORT = 8000;
 
 const startServer = async () => {
   const app = express();
@@ -38,9 +38,11 @@ const startServer = async () => {
   //   }
   //   console.log(chalk.blue(data));
   // });
+  const port = config.get<number>("PORT");
+  const host = config.get<string>("HOST");
 
-  const serverListen = app.listen(PORT, () => {
-    console.log(`server run on ${PORT} `);
+  const serverListen = app.listen(port, () => {
+    console.log(`server run on http://${host}:${port} `);
     console.log(` worker process ID pid= ${process.pid}`);
   });
   /* Handling rejection outside express */

@@ -45,7 +45,7 @@ router.use(authentication);
 router.get("/profile", getVendorProfile);
 router.put("/profile", updateVendorProfile);
 router.put("/cover-image", image, updateVendorCoverImage);
-router.get("/service", updateVendorService);
+router.put("/service", updateVendorService);
 
 router.post("/food", image, addFoodCon);
 router.get("/food", getFoodCon);
@@ -54,7 +54,6 @@ router.get("/orders",getCurrentOrders)
 router.put("/order/:id/process",processOrder)
 router.get("/order/:id",getOrderDetails)
 //========================= Offers =============================
-router.get("/offers",getOffersCon)
 router.post("/offer",addOfferCon)
 router.put("/offer/:id",editOfferCon)
 

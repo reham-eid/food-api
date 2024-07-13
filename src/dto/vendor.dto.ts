@@ -7,6 +7,8 @@ interface createVendorInput {
   phone: string;
   email: string;
   password: string;
+  lat: number;
+  lng: number;
 }
 
 interface updateVendorInput {

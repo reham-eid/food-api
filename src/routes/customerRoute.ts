@@ -17,6 +17,8 @@ import {
   addToCartCon,
   getCartCon,
   deleteCartCon,
+  applayOfferCon,
+  createPaymentCon,
 } from "../controllers";
 import { authentication } from "../middlewares";
 
@@ -39,10 +41,13 @@ router.put("/profile", editCustomerProfile);
 router.post("/cart", addToCartCon);
 router.get("/cart", getCartCon);
 router.delete("/cart", deleteCartCon);
+//=========================Apply Offers =============================
+router.get("/offer/verify/:id", applayOfferCon);
+//========================= Payment =============================
+router.post("/create-payment", createPaymentCon);
 //========================= Order =============================
 router.post("/create-order", createOrderCon);
 router.get("/orders", getAllOrdersCon);
 router.get("/order/:id", getOrderByIdCon);
-
 
 export { router as customerRoute };

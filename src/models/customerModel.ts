@@ -9,7 +9,7 @@ interface CustomerDoc extends Document {
   email: string;
   password: string;
   salt: string;
-  verfied: boolean;
+  verified: boolean;
   otp: number;
   otp_expiry: Date;
   lat: number;
@@ -27,7 +27,7 @@ const customerShema = new Schema(
     email: { type: String, required: true },
     password: { type: String, required: true },
     salt: { type: String, required: true },
-    verfied: { type: Boolean },
+    verified: { type: Boolean },
     otp: { type: Number },
     otp_expiry: { type: Date },
     lat: { type: Number },

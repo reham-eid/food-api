@@ -1,15 +1,13 @@
+import config  from "config";
 import mongoose from "mongoose";
-import { DB_LOCAL_URL } from '../config/env';
 
 export default async () => {
   try {
-    await mongoose.connect(DB_LOCAL_URL).then((result) => {
+    const DB = config.get<string>("DB_LOCAL_URL");
+    await mongoose.connect(DB).then((result) => {
       console.log(`connect to DB `);
     });
   } catch (err) {
     console.log(`error from DB connecion is ${err}`);
   }
 };
-
-
-

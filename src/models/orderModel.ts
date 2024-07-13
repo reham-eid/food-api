@@ -4,15 +4,14 @@ export interface orderDoc extends Document {
   orderId: string;
   vendorId: string;
   items: [any]; // [ {food , quantity:1} ]
-  totalPrice: number;
+  totalAmuont: number;
+  paidAmuont: number;
   orderDate: Date;
-  paidType: string; // {COD , CARD , Net Banking , Wallet }
-  paymentResponse: string; // { status : true , response: Bank response}
+  // paidType: string; // {COD , CARD , Net Banking , Wallet }
+  // paymentResponse: string; // { status : true , response: Bank response}
   orderStatus: string; // current status{Accept,Reject,Under-process,Ready} like this {waiting , preparing, onway , delivered , cancelled}
   remarks: string;
   deliveryId: string;
-  appliedOffers: boolean;
-  offerId: string;
   readyTime: number; // max 60min cause it is food order
 }
 const orderShema = new Schema(
@@ -32,15 +31,15 @@ const orderShema = new Schema(
         quantity: { type: Number, required: true },
       },
     ],
-    totalPrice: { type: Number, required: true },
-    paidType: { type: String },
+    totalAmuont: { type: Number, required: true },
+    paidAmuont: { type: Number, required: true },
+
     orderDate: { type: Date, required: true },
-    paymentResponse: { type: String },
     orderStatus: { type: String },
     remarks: { type: String },
     deliveryId: { type: String },
-    appliedOffers: { type: Boolean },
-    offerId: { type: String },
+    // appliedOffers: { type: Boolean },
+    // offerId: { type: String },
     readyTime: { type: Number , default:0 },
   },
   {

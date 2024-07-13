@@ -3,6 +3,7 @@ import {
   getAllFoods,
   getFoodAvaliability,
   getFoodIn30Min,
+  getOffersCon,
   getRestaurantById,
   getTopRestaurants,
 } from "../controllers";
@@ -19,5 +20,7 @@ router.get("/foods-in-30-min/:pincode", getFoodIn30Min);
 router.get("/search/:pincode", getAllFoods);
 //=========================Find Restaurants By ID =============================
 router.get("/restaurant/:id", getRestaurantById);
+//=========================Find Offers =============================
+router.get("/offers/:pinCode",getOffersCon)
 
 export { router as shoppingRoute };

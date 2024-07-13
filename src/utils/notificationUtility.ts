@@ -1,5 +1,5 @@
 import twilio from "twilio";
-import { RECEIVE_SMS_TO, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from "../config/env";
+import { config } from "config";
 
 // OTP
 export const GenerateOtp = () => {
@@ -9,19 +9,17 @@ export const GenerateOtp = () => {
   return { otp, expiry };
 };
 
-export const onRequestOtp = async(otp:number , toPhone:string)=>{
-  const accountSid = TWILIO_ACCOUNT_SID;
-  const authToken = TWILIO_AUTH_TOKEN;
-  
+export const onRequestOtp = async (otp: number, toPhone: string) => {
+  const accountSid = config.get<string>('TWILIO_ACCOUNT_SID') ;
+  const authToken =config.get<string>('TWILIO_AUTH_TOKEN');
+
   const client = twilio(accountSid, authToken);
-  
-    const message = await client.messages.create({
-      body :`You OTP is ${otp}`,
-      to : toPhone,
-      from:RECEIVE_SMS_TO ,
-    });
-    console.log(message);
-    return message
-  };
 
-
+  const message = await client.messages.create({
+    body: `You OTP is ${otp}`,
+    to: toPhone,
+    from: config.get<string>('RECEIVE_SMS_TO'),
+  });
+  console.log(message);
+  return message;
+};

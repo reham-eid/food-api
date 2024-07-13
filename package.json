@@ -20,6 +20,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "config": "^3.3.12",
     "cors": "^2.8.5",
     "cowsay": "^1.6.0",
     "dotenv": "^16.4.5",
@@ -28,8 +29,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
     "multer": "^1.4.5-lts.1",
+    "stripe": "^16.2.0",
     "ts-node-dev": "^2.0.0",
-    "twilio": "^5.2.0"
+    "twilio": "^5.2.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
