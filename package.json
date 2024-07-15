@@ -7,7 +7,8 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc -p .",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "lint": "eslint ./src --fix"
   },
   "engines": {
     "node": "18.17.1",
@@ -41,7 +42,10 @@
     "@types/figlet": "^1.5.8",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
+    "eslint": "^9.7.0",
+    "globals": "^15.8.0",
     "loadtest": "^8.0.9",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.16.0"
   }
 }

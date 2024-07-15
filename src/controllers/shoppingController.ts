@@ -5,7 +5,6 @@ import { foodDoc } from "../models/foodModel";
 const getFoodAvaliability = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { pincode: pinCode } = req.params;
 
@@ -43,7 +42,6 @@ const getTopRestaurants = async (
 const getFoodIn30Min = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { pincode: pinCode } = req.params;
 
@@ -60,7 +58,7 @@ const getFoodIn30Min = async (
   });
   return res.json({ foodResult });
 };
-const getAllFoods = async (req: Request, res: Response, next: NextFunction) => {
+const getAllFoods = async (req: Request, res: Response) => {
   const { pincode: pinCode } = req.params;
 
   const result = await vendorModel
@@ -76,7 +74,6 @@ const getAllFoods = async (req: Request, res: Response, next: NextFunction) => {
 const getRestaurantById = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { id } = req.params;
 
@@ -90,7 +87,6 @@ const getRestaurantById = async (
 const getOffersCon = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { pinCode } = req.params;
   const offer = await offerModel.find({ pinCode, isActive: true });

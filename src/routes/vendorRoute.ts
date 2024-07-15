@@ -7,8 +7,6 @@ import {
   editOfferCon,
   getCurrentOrders,
   getFoodCon,
-  getOffersCon,
-  getOrderByIdCon,
   getOrderDetails,
   getVendorProfile,
   processOrder,

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { createVendorInput } from "../dto";
 import { vendorModel } from "../models/vendorModel";
 import { generateHashPassword, generateSalt } from "../utils";
@@ -7,7 +7,6 @@ import { deliveryModel, transactionModel } from "../models";
 const createVendorCon = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const {
     name,
@@ -45,13 +44,13 @@ const createVendorCon = async (
     coverImages: [],
     rating: 0,
     foods: [],
-    lat: 0,
-    lng: 0,
+    lat,
+    lng,
   });
   return res.json({ message: "success", vendor });
 };
 
-const getVendors = async (req: Request, res: Response, next: NextFunction) => {
+const getVendors = async (req: Request, res: Response) => {
   const vendors = await vendorModel.find();
   if (vendors !== null) {
     return res.json({ vendors });
@@ -62,7 +61,6 @@ const getVendors = async (req: Request, res: Response, next: NextFunction) => {
 const getVendorById = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const id = req.params.vendorId;
   const vendor = await findVendor(id);
@@ -74,8 +72,7 @@ const getVendorById = async (
 
 const getTransactions = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const transactions = await transactionModel.find();
   if (transactions.length > 0) {
@@ -86,8 +83,7 @@ const getTransactions = async (
 
 const getTransactionById = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const { id: transactionId } = req.params;
   const transactions = await transactionModel.findById(transactionId);
@@ -103,7 +99,7 @@ const getTransactionById = async (
 const verifyDelivery = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next:NextFunction
 ) => {
   try {
     const { _id, status } = req.body;
@@ -126,9 +122,8 @@ const verifyDelivery = async (
 };
 
 const getDeliveryUsers = async (
-  req: Request,
   res: Response,
-  next: NextFunction
+  next:NextFunction
 ) => {
   try {
     const deliveryUsers = await deliveryModel.find();

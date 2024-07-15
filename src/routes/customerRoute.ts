@@ -1,10 +1,5 @@
 import express from "express";
 import {
-  getAllFoods,
-  getFoodAvaliability,
-  getFoodIn30Min,
-  getRestaurantById,
-  getTopRestaurants,
   customerSignUp,
   customerVerify,
   customerLogin,

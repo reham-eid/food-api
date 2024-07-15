@@ -1,4 +1,4 @@
-import { model, Schema, Document, Types } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
 interface TransactionDoc extends Document {
   customer: string;

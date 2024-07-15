@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { findVendor } from "./adminController";
 import {
   createFoodInput,
@@ -14,7 +14,6 @@ import { offerModel } from "../models/offerModel";
 const vendorLoginCon = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { email, password } = <loginVendorInput>req.body;
 
@@ -44,7 +43,6 @@ const vendorLoginCon = async (
 const getVendorProfile = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const user = req.user;
   if (!user) {
@@ -57,7 +55,6 @@ const getVendorProfile = async (
 const updateVendorProfile = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { address, name, phone, foodType } = <updateVendorInput>req.body;
   const user = req.user;
@@ -78,7 +75,6 @@ const updateVendorProfile = async (
 const updateVendorCoverImage = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const user = req.user;
   if (!user) {
@@ -98,7 +94,6 @@ const updateVendorCoverImage = async (
 const updateVendorService = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const user = req.user;
   const { lat, lng } = req.body;
@@ -119,7 +114,7 @@ const updateVendorService = async (
   }
 };
 //========================= Food =============================
-const addFoodCon = async (req: Request, res: Response, next: NextFunction) => {
+const addFoodCon = async (req: Request, res: Response) => {
   const user = req.user;
   if (!user) {
     return res.json({ message: "somthing went wrong with add food" });
@@ -150,7 +145,7 @@ const addFoodCon = async (req: Request, res: Response, next: NextFunction) => {
     res.json({ data: result });
   }
 };
-const getFoodCon = async (req: Request, res: Response, next: NextFunction) => {
+const getFoodCon = async (req: Request, res: Response) => {
   const user = req.user;
   if (!user) {
     return res.json({ message: "fooods Info not found" });
@@ -162,7 +157,6 @@ const getFoodCon = async (req: Request, res: Response, next: NextFunction) => {
 const getCurrentOrders = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const user = req.user;
   if (!user) {
@@ -177,7 +171,6 @@ const getCurrentOrders = async (
 const getOrderDetails = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { id: orderId } = req.params;
 
@@ -190,7 +183,6 @@ const getOrderDetails = async (
 const processOrder = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   const { id: orderId } = req.params;
   const { status, remarks, time } = req.body;
@@ -209,7 +201,7 @@ const processOrder = async (
   res.status(200).json({ data: orderResult });
 };
 //========================= Offers =============================
-const addOfferCon = async (req: Request, res: Response, next: NextFunction) => {
+const addOfferCon = async (req: Request, res: Response) => {
   const user = req.user;
   const {
     offerType,
@@ -253,11 +245,10 @@ const addOfferCon = async (req: Request, res: Response, next: NextFunction) => {
 
   res.status(201).json({ message: "success", data: offer });
 };
-const editOfferCon = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {};
+// const editOfferCon = async (
+//   req: Request,
+//   res: Response,
+// ) => {};
 
 export {
   vendorLoginCon,

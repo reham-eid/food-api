@@ -320,7 +320,7 @@ const addToCartCon = async (
 
     // If there are items in the cart, check if the item already exists
     if (cartItems.length > 0) {
-      let existFoodItems = cartItems.filter(
+      const existFoodItems = cartItems.filter(
         (item) => item.food._id.toString() === _id
       );
       console.log({ existFoodItems });
@@ -418,7 +418,6 @@ const applayOfferCon = async (
 ) => {
   try {
     const { id: offerId } = req.params;
-    const customer = req.user;
 
     const offer = await offerModel.findById(offerId);
     if (!offer) {
@@ -569,8 +568,8 @@ const assignOrderForDelivery = async (orderId: string, vendorId: string) => {
   const vendor = await vendorModel.findById(vendorId);
   if (vendor) {
     const areaCode = vendor.pinCode;
-    const vendorLng = vendor.lng;
-    const vendorLat = vendor.lat;
+    // const vendorLng = vendor.lng;
+    // const vendorLat = vendor.lat;
     // find the avaliable delivery person
 
     const deliveryPerson = await deliveryModel.find({
@@ -639,7 +638,7 @@ const createOrderCon = async (
     // create order id
     const orderId = `${Math.floor(Math.random() * 900000 + 1000)}`;
 
-    let cartItems: Array<{ food: any; quantity: number }> = [];
+    const cartItems: Array<{ food: any; quantity: number }> = [];
     // calc order amount
     let price = 0.0;
 

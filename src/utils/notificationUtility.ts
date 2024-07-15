@@ -4,7 +4,7 @@ import { config } from "config";
 // OTP
 export const GenerateOtp = () => {
   const otp = Math.floor(Math.random() * 900000);
-  let expiry = new Date();
+  const expiry = new Date();
   expiry.setTime(new Date().getTime() + 30 * 60 * 1000); // 30 min
   return { otp, expiry };
 };
