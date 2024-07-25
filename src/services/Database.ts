@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export default async () => {
   try {
-    const DB = config.get<string>("DB_LOCAL_URL");
+    const DB = config.get<string>("DB_LOCAL_URI");
     await mongoose.connect(DB).then(() => {
       console.log(`connect to DB `);
     });
